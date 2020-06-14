@@ -1,16 +1,21 @@
 import React, {Component} from 'react';
-import Car from './components/Car/Car'
-import './App.css';
+import Car from './components/Car/Car';
+import Counter from './components/Counter/Counter';
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary'
+import './App.scss';
 
 class App extends Component {
-    state = {
-        cars: [
-            {name: 'Ford', year: 2010},
-            {name: 'Opel', year: 2015},
-            {name: 'Audi', year: 2012}
-        ],
-        title: 'Hello',
-        show: false
+    constructor(props) {
+        super(props);
+        this.state = {
+            cars: [
+                {name: 'Ford', year: 2010},
+                {name: 'Opel', year: 2015},
+                {name: 'Audi', year: 2012}
+            ],
+            title: 'Hello',
+            show: false
+        }
     }
 
     changeTitle = title => {
@@ -46,13 +51,14 @@ class App extends Component {
         if (this.state.show) {
             cars = this.state.cars.map((item, index) => {
                 return (
-                    <Car
-                        key={index}
-                        name={item.name}
-                        year={item.year}
-                        onTitleChange={this.changeTitle.bind(this, item.name)}
-                        onChangeName={event => this.changeName(event.target.value, index)}
-                        onCarRemove={this.removeCar.bind(this, index)}/>
+                    <ErrorBoundary key={index}>
+                        <Car
+                            name={item.name}
+                            year={item.year}
+                            onTitleChange={this.changeTitle.bind(this, item.name)}
+                            onChangeName={event => this.changeName(event.target.value, index)}
+                            onCarRemove={this.removeCar.bind(this, index)}/>
+                    </ErrorBoundary>
                 )
             })
         }
@@ -64,6 +70,7 @@ class App extends Component {
                 <div>
                     <button onClick={this.toggleCars}>Show/Hide</button>
                 </div>
+                <Counter/>
                 {cars}
             </section>
         )

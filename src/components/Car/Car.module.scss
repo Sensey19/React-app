@@ -1,0 +1,13 @@
+@import "../../variables";
+
+.car {
+    border: 1px solid yellow;
+
+    &.green {
+        border: 1px solid $green;
+    }
+
+    &.red {
+        border: 1px solid red;
+    }
+}
