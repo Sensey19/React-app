@@ -4,6 +4,8 @@ import Counter from './components/Counter/Counter';
 import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary'
 import './App.scss';
 
+export const ClickedContext = React.createContext(false);
+
 class App extends Component {
     constructor(props) {
         super(props);
@@ -14,7 +16,8 @@ class App extends Component {
                 {name: 'Audi', year: 2012}
             ],
             title: 'Hello',
-            show: false
+            show: false,
+            clicked: false
         }
     }
 
@@ -55,6 +58,7 @@ class App extends Component {
                         <Car
                             name={item.name}
                             year={item.year}
+                            index={index}
                             onTitleChange={this.changeTitle.bind(this, item.name)}
                             onChangeName={event => this.changeName(event.target.value, index)}
                             onCarRemove={this.removeCar.bind(this, index)}/>
@@ -70,7 +74,12 @@ class App extends Component {
                 <div>
                     <button onClick={this.toggleCars}>Show/Hide</button>
                 </div>
-                <Counter/>
+
+                <ClickedContext.Provider value={this.state.clicked}>
+                    <Counter/>
+                </ClickedContext.Provider>
+
+                <button onClick={() => this.setState({clicked: true})}>Clicked by counter2!</button>
                 {cars}
             </section>
         )
