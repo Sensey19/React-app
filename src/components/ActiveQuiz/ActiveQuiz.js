@@ -1,27 +1,29 @@
 import React from 'react';
-import './ActiveQuiz.css';
+import AnswersList from './AnswersList/AnswersList.js';
 
 const ActiveQuiz = props => {
+    let answer = null
+    if (props.rightAnswerId !== null) {
+        answer = props.answers.map((item) => {
+            return (
+                (item.id === props.rightAnswerId) && item.text
+            )
+        })
+    }
+
     return (
         <div>
-            <p>
-                <span>
-                    <strong>1</strong>
-                    How are you doing?
-                    <small className="quiz-small">1 of 4</small>
-                </span>
-            </p>
-
-            <ul>
-                <li>1</li>
-                <li>2</li>
-                <li>3</li>
-                <li>4</li>
-            </ul>
+            <div>
+                <strong>{props.numberQuestion + 1}.</strong>
+                <span> {props.questions}</span>
+                <span onClick={props.onNextQuestion} style={{marginLeft: '20px'}}>Next question</span>
+                <p>{answer}</p>
+            </div>
+            <AnswersList
+                answers={props.answers}
+                onAnswerClick={props.onAnswerClick}/>
         </div>
     )
-
 }
-
 
 export default ActiveQuiz
