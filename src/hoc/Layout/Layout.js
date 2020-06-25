@@ -1,12 +1,15 @@
 import React, {Component} from 'react';
+import { withRouter } from 'react-router-dom';
 import MenuToggle from '../../components/Navigation/MenuToggle/MenuToggle.js';
 import Drawer from '../../components/Navigation/Drawer/Drawer.js';
 import styles from './Layout.module.scss';
 
-
 class Layout extends Component {
-    state = {
-        open: false
+    constructor(props) {
+        super(props)
+        this.state = {
+            open: false
+        }
     }
 
     openMenu = () => {
@@ -29,5 +32,5 @@ class Layout extends Component {
     }
 }
 
-export default Layout
+export default withRouter(Layout);
 

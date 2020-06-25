@@ -1,0 +1,25 @@
+.input {
+  margin-bottom: 20px;
+  width: 300px;
+  height: 50px;
+
+  &.invalid {
+    label {
+      color: red;
+    }
+  }
+
+  label {
+    display: block;
+  }
+
+  input {
+    border: 1px solid green;
+    outline: none;
+  }
+
+  .error {
+    display: block;
+    color: red;
+  }
+}

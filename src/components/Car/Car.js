@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import styles from "./Car.module.scss";
+// import styles from "./Car.module.scss";
 
 class Car extends React.Component {
     constructor(props) {
@@ -15,12 +15,12 @@ class Car extends React.Component {
     }
 
     render() {
-        let classExtra = [styles.car]
-        if (this.props.name.length === 0) classExtra.push(styles.green)
-        else classExtra.push(styles.red)
+        // let classExtra = [styles.car]
+        // if (this.props.name.length === 0) classExtra.push(styles.green)
+        // else classExtra.push(styles.red)
 
         return (
-            <div className={classExtra.join(' ')}>
+            <div>
                 <h1>{this.props.name}</h1>
                 <p>{this.props.year}</p>
                 <input

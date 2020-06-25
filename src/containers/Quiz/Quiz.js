@@ -29,13 +29,11 @@ class Quiz extends Component {
     }
 
     nextQuestion = () => {
-        this.setState((prevState) => {
-            if (prevState.numberQuestion < 2) {
-                return {
-                    numberQuestion: prevState.numberQuestion++
-                }
-            }
-        })
+        if (this.state.numberQuestion < 1) {
+            this.setState( {
+                numberQuestion: this.state.numberQuestion + 1
+            })
+        }
     }
 
     onAnswerClickHandler = (answerId) => {
