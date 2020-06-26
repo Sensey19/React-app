@@ -15,8 +15,7 @@ const ActiveQuiz = props => {
         <div>
             <div>
                 <strong>{props.numberQuestion + 1}.</strong>
-                <span> {props.questions}</span>
-                <span onClick={props.onNextQuestion} style={{marginLeft: '20px'}}>Next question</span>
+                <span> {props.question}</span>
                 <p>{answer}</p>
             </div>
             <AnswersList

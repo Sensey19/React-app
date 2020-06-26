@@ -4,6 +4,7 @@ import is from "is_js"
 
 export default class Auth extends Component {
     state = {
+        isFormValid: false,
         formControls: {
             email: {
                 value: '',
@@ -61,11 +62,16 @@ export default class Auth extends Component {
     onChangeHandler = (e, contlorName) => {
         const formControls = {...this.state.formControls}
         const control = {...formControls[contlorName]}
-        control.value = e.target.value
+        control.value = e
         control.touched = true
         control.valid = this.validateControl(control.value, (control.validation))
         formControls[contlorName] = control
-        this.setState({formControls})
+
+        let isFormValid = true
+        Object.keys(formControls).forEach(name => {
+            isFormValid = formControls[name].valid && isFormValid
+        })
+        this.setState({formControls, isFormValid})
     }
 
     submitHandler = e => {
@@ -85,7 +91,7 @@ export default class Auth extends Component {
                     type={control.type}
                     shouldValidate={!!control.validation}
                     errorMsg={control.errorMsg}
-                    onChange={e => this.onChangeHandler(e, item)}/>
+                    onChange={e => this.onChangeHandler(e.target.value, item)}/>
             )
         })
     }
@@ -98,8 +104,8 @@ export default class Auth extends Component {
                     {this.inputs()}
 
                     <div>
-                        <button onClick={this.login}>Log in</button>
-                        <button onClick={this.register}>Sign up</button>
+                        <button onClick={this.login} disabled={!this.state.isFormValid}>Log in</button>
+                        <button onClick={this.register} disabled={!this.state.isFormValid}>Sign up</button>
                     </div>
                 </form>
             </div>

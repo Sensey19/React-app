@@ -1,38 +1,26 @@
 import React, {Component} from 'react';
+import axios from '../../axios/axios'
 import ActiveQuiz from '../../components/ActiveQuiz/ActiveQuiz.js';
+import Loader from "../../components/UI/Loader/Loader";
 
 class Quiz extends Component {
     state = {
         numberQuestion: 0,
-        quiz: [
-            {
-                questions: 'How old are you?',
-                rightAnswerId: null,
-                answers: [
-                    {id: 1, text: 'I am 22'},
-                    {id: 2, text: 'I am 44'},
-                    {id: 3, text: 'I am 34'},
-                    {id: 4, text: 'I am 56'}
-                ]
-            },
-            {
-                questions: 'How are you doing?',
-                rightAnswerId: null,
-                answers: [
-                    {id: 5, text: 'just working'},
-                    {id: 6, text: 'doesnt matter'},
-                    {id: 7, text: 'I am fuzzy'},
-                    {id: 8, text: 'coding'}
-                ]
-            }
-        ]
+        quiz: [],
+        loading: true
     }
 
-    nextQuestion = () => {
-        if (this.state.numberQuestion < 1) {
-            this.setState( {
-                numberQuestion: this.state.numberQuestion + 1
+    async componentDidMount() {
+        const id = this.props.match.params.id
+        try {
+            const res = await axios.get(`/quizes/${id}.json`)
+            const quiz = res.data
+            this.setState({
+                quiz,
+                loading: false
             })
+        } catch (e) {
+            console.log(e);
         }
     }
 
@@ -46,13 +34,15 @@ class Quiz extends Component {
         return (
             <div>
                 <h1>Answers by questions!</h1>
-                <ActiveQuiz
-                    answers={this.state.quiz[this.state.numberQuestion].answers}
-                    questions={this.state.quiz[this.state.numberQuestion].questions}
-                    rightAnswerId={this.state.quiz[this.state.numberQuestion].rightAnswerId}
-                    numberQuestion={this.state.numberQuestion}
-                    onAnswerClick={this.onAnswerClickHandler}
-                    onNextQuestion={this.nextQuestion}/>
+                {this.state.loading
+                    ? <Loader/>
+                    :  <ActiveQuiz
+                        answers={this.state.quiz[this.state.numberQuestion].answers}
+                        question={this.state.quiz[this.state.numberQuestion].question}
+                        rightAnswerId={this.state.quiz[this.state.numberQuestion].rightAnswerId}
+                        numberQuestion={this.state.numberQuestion}
+                        onAnswerClick={this.onAnswerClickHandler}/>
+                }
             </div>
         )
     }
