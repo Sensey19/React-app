@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
+import axios from "axios";
 import Input from '../../components/UI/Input/Input'
+import Loader from "../../components/UI/Loader/Loader";
 import is from "is_js"
 
 export default class Auth extends Component {
@@ -30,15 +32,44 @@ export default class Auth extends Component {
                     minLength: 6
                 }
             }
+        },
+        loading: false
+    }
+
+    login = async () => {
+        this.setState({loading: true})
+        const logIn = {
+            email: this.state.formControls.email.value,
+            password: this.state.formControls.password.value,
+            returnSecureToken: true
+        }
+
+        try {
+            const data = await axios.post(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBir4h6trAd4LEfDdWEzR2OS4fOBfkV7XI`, logIn)
+            console.log(data);
+            this.setState({loading: false})
+        } catch (e) {
+            console.log(e);
+            this.setState({loading: false})
         }
     }
 
-    login = () => {
+    register = async () => {
+        this.setState({loading: true})
+        const auth = {
+            email: this.state.formControls.email.value,
+            password: this.state.formControls.password.value,
+            returnSecureToken: true
+        }
 
-    }
-
-    register = () => {
-
+        try {
+            const data = await axios.post(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBir4h6trAd4LEfDdWEzR2OS4fOBfkV7XI`, auth)
+            console.log(data.data);
+            this.setState({loading: false})
+        } catch (e) {
+            console.log(e);
+            this.setState({loading: false})
+        }
     }
 
     validateControl = (value, validation) => {
@@ -108,6 +139,7 @@ export default class Auth extends Component {
                         <button onClick={this.register} disabled={!this.state.isFormValid}>Sign up</button>
                     </div>
                 </form>
+                {this.state.loading ? <Loader/> : null}
             </div>
         )
     }

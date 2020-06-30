@@ -1,52 +1,54 @@
 import React, {Component} from 'react';
-import axios from '../../axios/axios'
+import {connect} from "react-redux";
+import {fetchQuizById, fetchQuizSetAnswerId} from '../../store/actions/quiz'
 import ActiveQuiz from '../../components/ActiveQuiz/ActiveQuiz.js';
 import Loader from "../../components/UI/Loader/Loader";
 
 class Quiz extends Component {
     state = {
-        numberQuestion: 0,
-        quiz: [],
-        loading: true
+        quizId: this.props.match.params.id,
+        detectChangeAnswer: 0
     }
 
     async componentDidMount() {
-        const id = this.props.match.params.id
-        try {
-            const res = await axios.get(`/quizes/${id}.json`)
-            const quiz = res.data
-            this.setState({
-                quiz,
-                loading: false
-            })
-        } catch (e) {
-            console.log(e);
-        }
+        this.props.fetchQuizById(this.state.quizId)
     }
 
-    onAnswerClickHandler = (answerId) => {
-        let quiz = [...this.state.quiz]
-        quiz[this.state.numberQuestion].rightAnswerId = answerId
-        this.setState({quiz})
+    fetchQuizSetAnswerId = (answerId) => {
+        this.props.fetchQuizSetAnswerId(answerId)
+        this.setState({detectChangeAnswer: this.state.detectChangeAnswer + 1})
     }
 
     render() {
         return (
             <div>
                 <h1>Answers by questions!</h1>
-                {this.state.loading
+                {this.props.loading || !this.props.quiz
                     ? <Loader/>
-                    :  <ActiveQuiz
-                        answers={this.state.quiz[this.state.numberQuestion].answers}
-                        question={this.state.quiz[this.state.numberQuestion].question}
-                        rightAnswerId={this.state.quiz[this.state.numberQuestion].rightAnswerId}
-                        numberQuestion={this.state.numberQuestion}
-                        onAnswerClick={this.onAnswerClickHandler}/>
+                    : <ActiveQuiz
+                        answers={this.props.quiz[0].answers}
+                        question={this.props.quiz[0].question}
+                        rightAnswerId={this.props.quiz[0].rightAnswerId}
+                        onAnswerClick={this.fetchQuizSetAnswerId}/>
                 }
             </div>
         )
     }
 }
 
-export default Quiz
+function mapStateToProps(state) {
+    return {
+        quiz: state.quiz.quiz,
+        loading: state.quiz.loading
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        fetchQuizById: id => dispatch(fetchQuizById(id)),
+        fetchQuizSetAnswerId: answerId => dispatch(fetchQuizSetAnswerId(answerId))
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Quiz)
 

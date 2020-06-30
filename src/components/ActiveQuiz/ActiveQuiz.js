@@ -14,7 +14,6 @@ const ActiveQuiz = props => {
     return (
         <div>
             <div>
-                <strong>{props.numberQuestion + 1}.</strong>
                 <span> {props.question}</span>
                 <p>{answer}</p>
             </div>
