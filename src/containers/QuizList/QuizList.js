@@ -22,7 +22,7 @@ class QuizList extends Component {
     render() {
         return (
             <div>
-                <h1>QuizList</h1>
+                <h1>QuizList from Sensey</h1>
                 {this.props.loading && this.props.quizes.length !== 0
                     ? <Loader/>
                     : <ul>{this.renderQuizes()}</ul>

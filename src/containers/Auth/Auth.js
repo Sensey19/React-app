@@ -1,10 +1,11 @@
 import React, {Component} from 'react'
-import axios from "axios";
+import {connect} from "react-redux"
 import Input from '../../components/UI/Input/Input'
 import Loader from "../../components/UI/Loader/Loader";
 import is from "is_js"
+import {auth} from "../../store/actions/auth";
 
-export default class Auth extends Component {
+class Auth extends Component {
     state = {
         isFormValid: false,
         formControls: {
@@ -36,40 +37,14 @@ export default class Auth extends Component {
         loading: false
     }
 
-    login = async () => {
-        this.setState({loading: true})
-        const logIn = {
-            email: this.state.formControls.email.value,
-            password: this.state.formControls.password.value,
-            returnSecureToken: true
-        }
-
-        try {
-            const data = await axios.post(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBir4h6trAd4LEfDdWEzR2OS4fOBfkV7XI`, logIn)
-            console.log(data);
-            this.setState({loading: false})
-        } catch (e) {
-            console.log(e);
-            this.setState({loading: false})
-        }
+    login = () => {
+        const form = this.state.formControls
+        this.props.auth(form.email.value, form.password.value, true)
     }
 
-    register = async () => {
-        this.setState({loading: true})
-        const auth = {
-            email: this.state.formControls.email.value,
-            password: this.state.formControls.password.value,
-            returnSecureToken: true
-        }
-
-        try {
-            const data = await axios.post(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBir4h6trAd4LEfDdWEzR2OS4fOBfkV7XI`, auth)
-            console.log(data.data);
-            this.setState({loading: false})
-        } catch (e) {
-            console.log(e);
-            this.setState({loading: false})
-        }
+    register = () => {
+        const form = this.state.formControls
+        this.props.auth(form.email.value, form.password.value, false)
     }
 
     validateControl = (value, validation) => {
@@ -144,3 +119,11 @@ export default class Auth extends Component {
         )
     }
 }
+
+function mapDispatchToProps(dispatch) {
+    return {
+        auth: (email, password, isLogin) => dispatch(auth(email, password, isLogin))
+    }
+}
+
+export default connect(null, mapDispatchToProps)(Auth)

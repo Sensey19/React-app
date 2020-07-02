@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {connect} from "react-redux"
 import { withRouter } from 'react-router-dom';
 import MenuToggle from '../../components/Navigation/MenuToggle/MenuToggle.js';
 import Drawer from '../../components/Navigation/Drawer/Drawer.js';
@@ -22,7 +23,7 @@ class Layout extends Component {
         return (
             <div>
                 <MenuToggle onToggle={this.openMenu}/>
-                {this.state.open ? <Drawer/> : null}
+                {this.state.open ? <Drawer isAuth={this.props.isAuth}/> : null}
 
                 <main className={styles.layout}>
                     {this.props.children}
@@ -32,5 +33,11 @@ class Layout extends Component {
     }
 }
 
-export default withRouter(Layout);
+function mapStateToProps(state) {
+    return {
+        isAuth: !!state.auth.token
+    }
+}
+
+export default withRouter(connect(mapStateToProps)(Layout))
 

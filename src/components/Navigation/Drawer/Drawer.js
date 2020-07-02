@@ -2,27 +2,8 @@ import React, {Component} from "react";
 import {NavLink} from 'react-router-dom';
 import styles from './Drawer.module.scss'
 
-const links = [
-    {
-        to: '/',
-        label: 'List',
-        exact: true
-    },
-    {
-        to: '/auth',
-        label: 'Auth',
-        exact: false
-
-    },
-    {
-        to: '/quiz-creator',
-        label: 'Quiz creator',
-        exact: false
-    }
-]
-
 class Drawer extends Component {
-    renderLinks() {
+    renderLinks(links) {
         return links.map((item, index) => {
             return (
                 <li className={styles.nav} key={index}>
@@ -36,10 +17,20 @@ class Drawer extends Component {
     }
 
     render() {
+        const links = [{to: '/', label: 'List', exact: true}]
+        if (this.props.isAuth) {
+            links.push(
+                {to: '/quiz-creator', label: 'Quiz creator', exact: false},
+                {to: '/logout', label: 'Log out', exact: false},
+            )
+        } else {
+            links.push({to: '/auth', label: 'Auth', exact: false})
+        }
+
         return (
             <nav>
                 <ul>
-                    {this.renderLinks()}
+                    {this.renderLinks(links)}
                 </ul>
             </nav>
         )

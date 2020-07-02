@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import {connect} from "react-redux"
-
 import Input from '../../components/UI/Input/Input'
 import Select from '../../components/UI/Select/Select'
 import Auxiliary from '../../hoc/Auxiliary/Auxiliary'

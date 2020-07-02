@@ -1,11 +1,14 @@
 import React, {Component} from 'react';
-import { Route, withRouter, Switch } from 'react-router-dom';
+import {Route, Switch, Redirect, withRouter} from 'react-router-dom';
+import {connect} from "react-redux"
 import Layout from './hoc/Layout/Layout';
 import Quiz from './containers/Quiz/Quiz';
 import Auth from './containers/Auth/Auth';
 import QuizCreator from './containers/QuizCreator/QuizCreator';
 import QuizList from './containers/QuizList/QuizList';
+import Logout from './components/Logout/Logout';
 import './MainApp.scss';
+import {autoLogin} from "./store/actions/auth";
 // import About from "./containers/About/About";
 // import Technology from "./containers/Technology/Technology";
 
@@ -14,17 +17,35 @@ class MainApp extends Component {
         isLogged: false
     }
 
+    componentDidMount() {
+        this.props.autoLogin()
+    }
+
     render() {
-        return(
-            <Layout>
+        let routes = (
+            <Switch>
+                <Route path="/auth" component={Auth}/>
+                <Route path="/quiz/:id" component={Quiz}/>
+                <Route path="/" component={QuizList} exact/>
+                <Redirect to={'/'}/>
+            </Switch>
+        )
+
+        if (this.props.isAuth) {
+            routes = (
                 <Switch>
-                    <Route path="/auth" component={Auth}/>
                     <Route path="/quiz-creator" component={QuizCreator}/>
                     <Route path="/quiz/:id" component={Quiz}/>
-                    <Route path="/" component={QuizList} />
+                    <Route path="/logout" component={Logout}/>
+                    <Route path="/" component={QuizList} exact/>
+                    <Redirect to={'/'}/>
                 </Switch>
+            )
+        }
 
-
+        return (
+            <Layout>
+                {routes}
                 {/*<Quiz/>*/}
                 {/*<button onClick={() => this.setState({isLogged: true})}>Log in</button>*/}
                 {/*<Switch>*/}
@@ -39,5 +60,17 @@ class MainApp extends Component {
     }
 }
 
-export default withRouter(MainApp);
+function mapStateToProps(state) {
+    return {
+        isAuth: !!state.auth.token
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        autoLogin: () => dispatch(autoLogin())
+    }
+}
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MainApp))
 
